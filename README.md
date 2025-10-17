@@ -1,76 +1,97 @@
-This guide explains how to run the scraper using a ready-to-use Docker image from Docker Hub. No build step is required.
+Ce guide explique comment utiliser le scraper à partir d’une image Docker disponible sur Docker Hub. **Aucune étape de build n’est nécessaire**.
 
-Docker Hub image:
-- Repository: [benamoroussema/tiktok-scraper](https://hub.docker.com/r/benamoroussema/tiktok-scraper)
-- Tag: `v1`
+**Image Docker Hub :**
 
- 1) Install Docker Desktop
+* Repository : [benamoroussema/tiktok-scraper](https://hub.docker.com/r/benamoroussema/tiktok-scraper)
+* Tag : `v1`
 
-- Windows: follow the official guide to install Docker Desktop
-  - https://docs.docker.com/desktop/setup/install/windows-install/
-- Start Docker Desktop and ensure it shows “Running”.
-- If you use WSL, enable WSL integration:
-  - Docker Desktop > Settings > Resources > WSL Integration > enable your distro.
+---
 
+ 1) Installer Docker Desktop
 
-2) Create a local output folder
+* **Windows :** suivez le guide officiel pour installer Docker Desktop :
 
-Create a folder to store the CSV output.
+  * [https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/)
+* Démarrez Docker Desktop et assurez-vous qu’il affiche “Running”.
+* Si vous utilisez WSL, activez l’intégration WSL :
 
-- PowerShell (Windows):
+  * Docker Desktop > Paramètres > Ressources > Intégration WSL > activez votre distribution.
+
+---
+
+2) Créer un dossier local pour la sortie
+
+Créez un dossier pour stocker le CSV généré.
+
+* **PowerShell (Windows) :**
+
 ```powershell
 mkdir data -Force
 ```
 
-- WSL/macOS/Linux:
+* **WSL/macOS/Linux :**
+
 ```bash
 mkdir -p ./data
 ```
 
+---
 
+ 3) Récupérer l’image
 
-3) Pull the image
-
-`docker run` will auto-pull if needed, but you can pull explicitly:
+`docker run` téléchargera automatiquement l’image si nécessaire, mais vous pouvez la récupérer explicitement :
 
 ```bash
 docker pull benamoroussema/tiktok-scraper:v1
 ```
 
-4) Run the scraper
+---
 
-Mount your local `data` folder into the container at `/data`, and set `--output` to `/data/your-file.csv`.
+4) Exécuter le scraper
 
-- PowerShell (Windows; run from your project/output folder):
+Montez votre dossier local `data` dans le conteneur à `/data` et utilisez `--output` pour définir le chemin de sortie dans le conteneur.
+
+* **PowerShell (Windows ; depuis le dossier projet/output) :**
+
 ```powershell
 docker run --rm -v "${PWD}\data:/data" benamoroussema/tiktok-scraper:v1 --username hugodecrypte --limit 5 --output /data/test.csv
 ```
 
-- WSL/macOS/Linux (run from your project/output folder):
+* **WSL/macOS/Linux (depuis le dossier projet/output) :**
+
 ```bash
 docker run --rm -v "$(pwd)/data:/data" benamoroussema/tiktok-scraper:v1 --username hugodecrypte --limit 5 --output /data/test.csv
 ```
 
-5) Where is the output file created?
+---
 
-- Inside the container, the scraper writes to the path you pass to `--output` (e.g., `/data/test.csv`).
-- On your machine, that file appears in the local folder you mounted to `/data` with `-v`.
+5) Où est créé le fichier de sortie ?
 
-- WSL, running from your project folder:
-  - Command:
+* À l’intérieur du conteneur, le scraper écrit dans le chemin passé à `--output` (ex : `/data/test.csv`).
+
+* Sur votre machine, le fichier apparaît dans le dossier local que vous avez monté sur `/data` avec `-v`.
+
+* **WSL, depuis le dossier projet :**
+
+  * Commande :
+
     ```bash
     docker run --rm -v "$(pwd)/data:/data" benamoroussema/tiktok-scraper:v1 --username hugodecrypte --limit 5 --output /data/test.csv
     ```
-  - Resulting file on your machine (Windows path via WSL):
-    - `./data/test.csv` (for example, `/mnt/c/Users/MSI/Desktop/test technique/data/test.csv`)
-  - Verify:
+  * Fichier généré sur votre machine (chemin Windows via WSL) :
+
+    * `./data/test.csv` (ex : `/mnt/c/Users/MSI/Desktop/test technique/data/test.csv`)
+  * Vérification :
+
     ```bash
     ls -lh "./data/test.csv"
     ```
 
-If you forget the `-v` mount, the file is created inside the container and will be lost when the container exits.
+**Remarque :** si vous oubliez le `-v` pour monter le dossier, le fichier sera créé uniquement dans le conteneur et sera perdu à sa fermeture.
 
+---
 
-10) About the Dockerfile
+6) À propos du Dockerfile
 
-You don’t need to build locally to run the prebuilt image. If you prefer to build from source, the Dockerfile is committed in the repository (not included in this README).
+Vous n’avez pas besoin de build localement pour utiliser l’image préconstruite.
+Si vous préférez build à partir du code source, le Dockerfile est inclus dans le repository (non décrit dans ce README).
