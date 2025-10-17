@@ -71,20 +71,6 @@ docker run --rm -v "$(pwd)/data:/data" benamoroussema/tiktok-scraper:v1 --userna
 If you forget the `-v` mount, the file is created inside the container and will be lost when the container exits.
 
 
-
-## 7) Using a proxy (optional)
-
-If your network region limits data, run with a proxy:
-- PowerShell:
-```powershell
-docker run --rm -e HTTPS_PROXY="http://user:pass@host:port" -v "${PWD}\data:/data" benamoroussema/tiktok-scraper:v1 --username hugodecrypte --limit 5 --output /data/test.csv
-```
-
-- WSL/macOS/Linux:
-```bash
-docker run --rm -e HTTPS_PROXY="http://user:pass@host:port" -v "$(pwd)/data:/data" benamoroussema/tiktok-scraper:v1 --username hugodecrypte --limit 5 --output /data/test.csv
-```
-
 10) About the Dockerfile
 
 You don’t need to build locally to run the prebuilt image. If you prefer to build from source, the Dockerfile is committed in the repository (not included in this README).
